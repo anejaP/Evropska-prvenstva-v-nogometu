@@ -49,27 +49,17 @@ class Prvenstva(Tabela):
     def ustvari(self):
         sql = """
             CREATE TABLE prvenstva (
-<<<<<<< HEAD
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-=======
->>>>>>> be80203319d6ca014f96d407990c89a9da0ffc16
                 datum TEXT NOT NULL,
                 domaca_ekipa TEXT NOT NULL,
                 gostujoca_ekipa TEXT NOT NULL,
                 domaci_goli INTEGER NOT NULL,
                 gostujoci_goli INTEGER NOT NULL,
                 del_prvenstva TEXT NOT NULL,
-<<<<<<< HEAD
                 dodatek TEXT,
                 stadion TEXT NOT NULL,
                 mesto TEXT NOT NULL,
                 stevilo_gledalcev INTEGER,
-=======
-                dodatek TEXT NOT NULL,
-                stadion TEXT NOT NULL,
-                mesto TEXT NOT NULL,
-                stevilo_gledalcev INTEGER NOT NULL,
->>>>>>> be80203319d6ca014f96d407990c89a9da0ffc16
                 leto INTEGER NOT NULL
             );
         """
@@ -77,18 +67,13 @@ class Prvenstva(Tabela):
 
 
 class Igralci(Tabela):
-<<<<<<< HEAD
     """
     Tabela za igralce. Vsebuje podatke o imenu, priimku, državi, rojstnem datumu, poziciji in letu prvenstva.
     """
-=======
-    """"""
->>>>>>> be80203319d6ca014f96d407990c89a9da0ffc16
     ime = 'igralec'
     podatki = 'igralci.csv'
 
     def ustvari(self):
-<<<<<<< HEAD
         sql = """
             CREATE TABLE igralec (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,20 +87,6 @@ class Igralci(Tabela):
         self.conn.execute(sql)
 
 
-=======
-        sql="""
-            CREATE TABLE igralec (
-                ime TEXT NOT NULL,
-                priimek TEXT NOT NULL,
-                drzava TEXT NOT NULL,
-                rojstni_datum TEXT NOT NULL,
-                pozicija TEXT NOT NULL,
-                leto_prvenstva INTEGER NOT NULL
-            );
-        """
-        self.conn.execute(sql)
-        
->>>>>>> be80203319d6ca014f96d407990c89a9da0ffc16
 def pripravi_bazo():
     conn = sqlite3.connect("baza.sqlite")
     prvenstvo = Prvenstva(conn)
@@ -128,13 +99,7 @@ def pripravi_bazo():
     igralec.uvozi()
     conn.commit()
     conn.close()
-<<<<<<< HEAD
 
 
 if __name__ == "__main__":
-=======
-                          
-if __name__ == "__main__":
-    import sqlite3
->>>>>>> be80203319d6ca014f96d407990c89a9da0ffc16
     pripravi_bazo()
