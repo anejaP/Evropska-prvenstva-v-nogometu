@@ -85,7 +85,7 @@ class Prvenstva(Tabela):
         self.conn.execute(sql)
 
 
-class Igralec(Tabela):
+class Igralci(Tabela):
     """"""
     ime = 'igralec'
     podatki = 'igralci.csv'
@@ -103,3 +103,19 @@ class Igralec(Tabela):
         """
         self.conn.execute(sql)
         
+def pripravi_bazo():
+    conn = sqlite3.connect("baza.sqlite")
+    prvenstvo = Prvenstva(conn)
+    igralec = Igralci(conn)
+    prvenstvo.izbrisi()
+    igralec.izbrisi()
+    prvenstvo.ustvari()
+    igralec.ustvari()
+    prvenstvo.uvozi()
+    igralec.uvozi()
+    conn.commit()
+    conn.close()
+                          
+if __name__ == "__main__":
+    import sqlite3
+    pripravi_bazo()
