@@ -1,15 +1,10 @@
 import csv
+import sqlite3
 
-PARAM_FMT = ":{}" # za SQLite
+PARAM_FMT = ":{}"  # za SQLite
 
 class Tabela:
-    """
-    Razred, ki predstavlja tabelo v bazi.
-
-    Polja razreda:
-    - ime: ime tabele
-    - podatki: ime datoteke s podatki ali None
-    """
+    ''' ... '''
     ime = None
     podatki = None
 
@@ -17,50 +12,36 @@ class Tabela:
         self.conn = conn
     
     def ustvari(self):
-        """Ustvari tabelo v bazi.
-
-        Podrazredi morajo povoziti to metodo.
-        """
         raise NotImplementedError
     
     def izbrisi(self):
-        """Izbriše tabelo."""
         self.conn.execute(f"DROP TABLE IF EXISTS {self.ime};")
     
     def dodajanje(self, stolpci=None):
-        """
-        Metoda za gradnjo poizvedbe.
-
-        Argumenti:
-        - stolpci: seznam stolpcev
-        """
         return f"""
             INSERT INTO {self.ime} ({", ".join(stolpci)})
             VALUES ({", ".join(PARAM_FMT.format(s) for s in stolpci)});
         """
 
     def dodaj_vrstico(self, **podatki):
-        """
-        Metoda za dodajanje vrstice.
-
-        Argumenti:
-        - poimenovani parametri: vrednosti v ustreznih stolpcih
-        """
-        podatki = {kljuc: vrednost for kljuc, vrednost in podatki.items()
-                   if vrednost is not None}
+        podatki = {kljuc: vrednost for kljuc, vrednost in podatki.items() if vrednost is not None}
         poizvedba = self.dodajanje(podatki.keys())
         cur = self.conn.execute(poizvedba, podatki)
         return cur.lastrowid
 
     def uvozi(self, encoding="UTF8"):
-        if self.podatki is None:
-            return None
-        with open(self.podatki, encoding=encoding) as datoteka:
-            podatki = csv.reader(datoteka)
-            stolpci = next(podatki)
-            for vrstica in podatki:
-                podatek = {k: None if v == "" else v for k, v in zip(stolpci, vrstica)}
-                self.dodaj_vrstico(**podatek)
+            if self.podatki is None:
+                return None
+            try:
+                with open(self.podatki, encoding=encoding) as datoteka:
+                    podatki = csv.reader(datoteka, delimiter=';')  # Pravilno ločilo
+                    stolpci = next(podatki)
+                    for vrstica in podatki:
+                        podatek = {k: None if v == "" else v for k, v in zip(stolpci, vrstica)}
+                        self.dodaj_vrstico(**podatek)
+            except Exception as e:
+                print(f"Napaka pri uvozu podatkov iz {self.podatki}: {e}")
+
 
 class Prvenstva(Tabela):
     ime = 'prvenstva'
@@ -69,16 +50,17 @@ class Prvenstva(Tabela):
     def ustvari(self):
         sql = """
             CREATE TABLE prvenstva (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 datum TEXT NOT NULL,
                 domaca_ekipa TEXT NOT NULL,
                 gostujoca_ekipa TEXT NOT NULL,
                 domaci_goli INTEGER NOT NULL,
                 gostujoci_goli INTEGER NOT NULL,
                 del_prvenstva TEXT NOT NULL,
-                dodatek TEXT NOT NULL,
+                dodatek TEXT,
                 stadion TEXT NOT NULL,
                 mesto TEXT NOT NULL,
-                stevilo_gledalcev INTEGER NOT NULL,
+                stevilo_gledalcev INTEGER,
                 leto INTEGER NOT NULL
             );
         """
@@ -86,23 +68,26 @@ class Prvenstva(Tabela):
 
 
 class Igralci(Tabela):
-    """"""
+    """
+    Tabela za igralce. Vsebuje podatke o imenu, priimku, državi, rojstnem datumu, poziciji in letu prvenstva.
+    """
     ime = 'igralec'
     podatki = 'igralci.csv'
 
     def ustvari(self):
-        sql="""
+        sql = """
             CREATE TABLE igralec (
-                ime TEXT NOT NULL,
-                priimek TEXT NOT NULL,
-                drzava TEXT NOT NULL,
-                rojstni_datum TEXT NOT NULL,
-                pozicija TEXT NOT NULL,
-                leto_prvenstva INTEGER NOT NULL
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ime_priimek TEXT NOT NULL,
+                drzava TEXT,
+                rojstni_datum TEXT,
+                pozicija TEXT,
+                leto INTEGER NOT NULL
             );
         """
         self.conn.execute(sql)
-        
+
+
 def pripravi_bazo():
     conn = sqlite3.connect("baza.sqlite")
     prvenstvo = Prvenstva(conn)
@@ -115,7 +100,7 @@ def pripravi_bazo():
     igralec.uvozi()
     conn.commit()
     conn.close()
-                          
+
+
 if __name__ == "__main__":
-    import sqlite3
     pripravi_bazo()
