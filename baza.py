@@ -4,6 +4,7 @@ import sqlite3
 PARAM_FMT = ":{}"  # za SQLite
 
 class Tabela:
+    ''' ... '''
     ime = None
     podatki = None
 
