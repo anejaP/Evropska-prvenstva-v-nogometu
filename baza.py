@@ -63,7 +63,43 @@ class Tabela:
                 self.dodaj_vrstico(**podatek)
 
 class Prvenstva(Tabela):
-    """"""
-    ime = 'prvenstvo'
+    ime = 'prvenstva'
     podatki = 'prvenstva.csv'
-    
+
+    def ustvari(self):
+        sql = """
+            CREATE TABLE prvenstva (
+                datum TEXT NOT NULL,
+                domaca_ekipa TEXT NOT NULL,
+                gostujoca_ekipa TEXT NOT NULL,
+                domaci_goli INTEGER NOT NULL,
+                gostujoci_goli INTEGER NOT NULL,
+                del_prvenstva TEXT NOT NULL,
+                dodatek TEXT NOT NULL,
+                stadion TEXT NOT NULL,
+                mesto TEXT NOT NULL,
+                stevilo_gledalcev INTEGER NOT NULL,
+                leto INTEGER NOT NULL
+            );
+        """
+        self.conn.execute(sql)
+
+
+class Igralec(Tabela):
+    """"""
+    ime = 'igralec'
+    podatki = 'igralci.csv'
+
+    def ustvari(self):
+        sql="""
+            CREATE TABLE igralec (
+                ime TEXT NOT NULL,
+                priimek TEXT NOT NULL,
+                drzava TEXT NOT NULL,
+                rojstni_datum TEXT NOT NULL,
+                pozicija TEXT NOT NULL,
+                leto_prvenstva INTEGER NOT NULL
+            );
+        """
+        self.conn.execute(sql)
+        
