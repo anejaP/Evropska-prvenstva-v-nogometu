@@ -103,4 +103,8 @@ def pripravi_bazo():
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     pripravi_bazo()
+=======
+    pripravi_bazo()
+>>>>>>> abe87205e60c5b8704c48a029d59d4e75cee6f25
