@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evropska prvenstva v nogometu</title>
+</head>
+<body>
+    <h1>Evropska prvenstva v nogometu</h1>
+    <h2>Izberite leto prvenstva:</h2>
+    <ul id="leta-prvenstev"></ul>
+
+    <h3 id="rezultati-naslov" style="display:none;">Rezultati za izbrano leto:</h3>
+    <div id="rezultati"></div>
+
+    <script>
+        // Dinamično pridobi vsa leta prvenstev in jih prikaže kot povezave
+        fetch('/leta')
+            .then(response => response.json())
+            .then(data => {
+                let seznam = document.getElementById('leta-prvenstev');
+                data.forEach(leto => {
+                    let li = document.createElement('li');
+                    li.innerHTML = `<a href="#" onclick="prikaziPodatke(${leto})">${leto}</a>`;
+                    seznam.appendChild(li);
+                });
+            });
+
+        function prikaziPodatke(leto) {
+            fetch(`/prvenstvo/${leto}`)
+                .then(response => response.json())
+                .then(data => {
+                    let rezultati = document.getElementById('rezultati');
+                    rezultati.innerHTML = '';
+
+                    // Prikaz tekem
+                    let tekmeHtml = '<h4>Tekme:</h4><ul>';
+                    data.tekme.forEach(tekma => {
+                        tekmeHtml += `<li>${tekma.datum} - ${tekma.domaca_ekipa} ${tekma.domaci_goli}:${tekma.gostujoci_goli} ${tekma.gostujoca_ekipa}</li>`;
+                    });
+                    tekmeHtml += '</ul>';
+                    rezultati.innerHTML += tekmeHtml;
+
+                    // Prikaz igralcev
+                    let igralciHtml = '<h4>Igralci:</h4><ul>';
+                    data.igralci.forEach(igralec => {
+                        igralciHtml += `<li>${igralec.ime_priimek}, ${igralec.drzava} (${igralec.pozicija})</li>`;
+                    });
+                    igralciHtml += '</ul>';
+                    rezultati.innerHTML += igralciHtml;
+
+                    document.getElementById('rezultati-naslov').style.display = 'block';
+                });
+        }
+    </script>
+</body>
+</html>
+
