@@ -1,9 +1,21 @@
 import bottle
 import sqlite3
 import os
+from datetime import datetime
+
+# Funkcija za odstranitev oklepajev in odvečnih presledkov
+def odstrani_odvecne_znake(tekst):
+    if tekst:
+        return tekst.split('(')[0]
+    return tekst
 
 # Nastavimo pot do predlog na isti direktorij kot datoteka spletni_vmesnik.py
 bottle.TEMPLATE_PATH.insert(0, os.path.dirname(__file__))
+
+# Dovolimo dostop do statičnih datotek
+@bottle.route('/static/<filepath:path>')
+def server_static(filepath):
+    return bottle.static_file(filepath, root='./static')
 
 @bottle.get("/")
 def index():
@@ -21,46 +33,50 @@ def leta():
 @bottle.get("/prvenstvo/<leto:int>")
 def prvenstvo(leto):
     conn = sqlite3.connect("baza.sqlite")
-
     tekme_query = """
     SELECT datum, domaca_ekipa, domaci_goli, gostujoca_ekipa, gostujoci_goli, 
-           stadion, mesto, stevilo_gledalcev, del_prvenstva, dodatek
+           stadion, mesto, stevilo_gledalcev, del_prvenstva, dodatek 
     FROM prvenstva WHERE leto = ?
     """
     tekme = [
         {
-            "datum": row[0],
-            "domaca_ekipa": row[1],
+            "datum": odstrani_odvecne_znake(row[0]),
+            "domaca_ekipa": odstrani_odvecne_znake(row[1]),
             "domaci_goli": row[2],
-            "gostujoca_ekipa": row[3],
+            "gostujoca_ekipa": odstrani_odvecne_znake(row[3]),
             "gostujoci_goli": row[4],
-            "stadion": row[5],
-            "mesto": row[6],
+            "stadion": odstrani_odvecne_znake(row[5]),
+            "mesto": odstrani_odvecne_znake(row[6]),
             "stevilo_gledalcev": row[7],
-            "del_prvenstva": row[8],
-            "dodatek": row[9]
-        }
-        for row in conn.execute(tekme_query, (leto,))
+            "del_prvenstva": odstrani_odvecne_znake(row[8]),
+            "dodatek": odstrani_odvecne_znake(row[9])
+        } for row in conn.execute(tekme_query, (leto,))
     ]
-
     conn.close()
     return bottle.template("prvenstvo.html", leto=leto, tekme=tekme)
 
 @bottle.get("/igralci/<leto:int>/<drzava>")
 def igralci_drzave(leto, drzava):
     conn = sqlite3.connect("baza.sqlite")
+    drzava = drzava.strip()  # Odstranimo odvečne presledke
 
     igralci_query = """
-    SELECT ime_priimek, drzava, pozicija 
-    FROM igralec WHERE leto = ? AND drzava = ?
+    SELECT DISTINCT ime_priimek, pozicija, rojstni_datum 
+    FROM igralec 
+    WHERE leto = ? AND drzava = ?
     """
-    igralci = [
-        {
-            "ime_priimek": row[0],
-            "pozicija": row[2]
-        }
-        for row in conn.execute(igralci_query, (leto, drzava))
-    ]
+
+    igralci = []
+    for row in conn.execute(igralci_query, (leto, drzava)):
+        ime_priimek, pozicija, rojstni_datum = row
+        if rojstni_datum:
+            try:
+                rojstni_datum = datetime.strptime(str(int(rojstni_datum)), "%d%m%Y").strftime("%d.%m.%Y")
+            except ValueError:
+                rojstni_datum = "Neznan datum"
+        else:
+            rojstni_datum = "Neznan datum"
+        igralci.append({"ime_priimek": ime_priimek, "pozicija": pozicija, "rojstni_datum": rojstni_datum})
 
     conn.close()
     return bottle.template("igralci.html", drzava=drzava, igralci=igralci, leto=leto)
