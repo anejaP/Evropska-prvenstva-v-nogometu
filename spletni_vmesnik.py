@@ -22,10 +22,9 @@ def leta():
 def prvenstvo(leto):
     conn = sqlite3.connect("baza.sqlite")
 
-    # Posodobljena poizvedba za pridobitev dodatnih podatkov
     tekme_query = """
     SELECT datum, domaca_ekipa, domaci_goli, gostujoca_ekipa, gostujoci_goli, 
-           stadion, mesto, stevilo_gledalcev
+           stadion, mesto, stevilo_gledalcev, del_prvenstva, dodatek
     FROM prvenstva WHERE leto = ?
     """
     tekme = [
@@ -37,27 +36,34 @@ def prvenstvo(leto):
             "gostujoci_goli": row[4],
             "stadion": row[5],
             "mesto": row[6],
-            "stevilo_gledalcev": row[7]
+            "stevilo_gledalcev": row[7],
+            "del_prvenstva": row[8],
+            "dodatek": row[9]
         }
         for row in conn.execute(tekme_query, (leto,))
     ]
 
-    # Pridobi podatke o igralcih
+    conn.close()
+    return bottle.template("prvenstvo.html", leto=leto, tekme=tekme)
+
+@bottle.get("/igralci/<leto:int>/<drzava>")
+def igralci_drzave(leto, drzava):
+    conn = sqlite3.connect("baza.sqlite")
+
     igralci_query = """
     SELECT ime_priimek, drzava, pozicija 
-    FROM igralec WHERE leto = ?
+    FROM igralec WHERE leto = ? AND drzava = ?
     """
     igralci = [
         {
             "ime_priimek": row[0],
-            "drzava": row[1],
-            "pozicija": row[2],
+            "pozicija": row[2]
         }
-        for row in conn.execute(igralci_query, (leto,))
+        for row in conn.execute(igralci_query, (leto, drzava))
     ]
 
     conn.close()
-    return bottle.template("prvenstvo.html", leto=leto, tekme=tekme, igralci=igralci)
+    return bottle.template("igralci.html", drzava=drzava, igralci=igralci, leto=leto)
 
 if __name__ == "__main__":
     bottle.run(host="localhost", port=8080, debug=True, reloader=True)
