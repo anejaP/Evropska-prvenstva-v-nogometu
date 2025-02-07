@@ -78,21 +78,21 @@
     <h2>Tekme:</h2>
     <ul>
         % for tekma in tekme:
-            <li>
-                <div class="match-info">
-                    <strong>{{tekma['datum']}}</strong>: 
-                    <a href="/igralci/{{leto}}/{{tekma['domaca_ekipa']}}">{{tekma['domaca_ekipa']}}</a> 
-                    {{tekma['domaci_goli']}} - {{tekma['gostujoci_goli']}} 
-                    <a href="/igralci/{{leto}}/{{tekma['gostujoca_ekipa']}}">{{tekma['gostujoca_ekipa']}}</a>
-                </div>
-                <div class="additional-info">
-                    {{tekma['dodatek']}}<br>
-                    Faza tekmovanja: {{tekma['del_prvenstva']}}<br>
-                    Stadion: {{tekma['stadion']}}<br>
-                    Mesto: {{tekma['mesto']}}<br>
-                    Št. gledalcev: {{tekma['stevilo_gledalcev']}}
-                </div>
-            </li>
+        <li>
+            <div class="match-info">
+                <strong>{{tekma['datum']}}</strong>: 
+                <a href="/igralci/{{leto}}/{{tekma['domaca_ekipa']}}">{{tekma['domaca_ekipa']}}</a> 
+                {{tekma['domaci_goli']}} - {{tekma['gostujoci_goli']}} 
+                <a href="/igralci/{{leto}}/{{tekma['gostujoca_ekipa']}}">{{tekma['gostujoca_ekipa']}}</a>
+            </div>
+            <div class="additional-info">
+                {{tekma['dodatek']}}<br>
+                Faza tekmovanja: {{tekma['del_prvenstva']}}<br>
+                Stadion: {{tekma['stadion']}}<br>
+                Mesto: {{tekma['mesto']}}<br>
+                Št. gledalcev: {{tekma['stevilo_gledalcev']}}
+            </div>
+        </li>
         % end
     </ul>
 </main>
