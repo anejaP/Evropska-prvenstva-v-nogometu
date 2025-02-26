@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Igralci države {{drzava}} - {{leto}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            color: #1abc9c;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Igralci države {{drzava}} - {{leto}}</h1>
+</header>
+
+<main>
+    <a href="/prvenstvo/{{leto}}" class="back-link">&larr; Nazaj na tekme</a>
+
+    <h2>Seznam igralcev:</h2>
+    <ul>
+        % for igralec in igralci:
+        <li>{{igralec['ime_priimek']}} (Pozicija: {{igralec['pozicija']}}, Rojstni datum: {{igralec['rojstni_datum']}})</li>
+        % end
+    </ul>
+</main>
+
+</body>
+</html>

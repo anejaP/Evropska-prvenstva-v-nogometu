@@ -4,19 +4,18 @@ import sqlite3
 PARAM_FMT = ":{}"  # za SQLite
 
 class Tabela:
-    ''' ... '''
     ime = None
     podatki = None
 
     def __init__(self, conn):
         self.conn = conn
-    
+
     def ustvari(self):
         raise NotImplementedError
-    
+
     def izbrisi(self):
         self.conn.execute(f"DROP TABLE IF EXISTS {self.ime};")
-    
+
     def dodajanje(self, stolpci=None):
         return f"""
             INSERT INTO {self.ime} ({", ".join(stolpci)})
@@ -30,18 +29,17 @@ class Tabela:
         return cur.lastrowid
 
     def uvozi(self, encoding="UTF8"):
-            if self.podatki is None:
-                return None
-            try:
-                with open(self.podatki, encoding=encoding) as datoteka:
-                    podatki = csv.reader(datoteka, delimiter=';')  # Pravilno ločilo
-                    stolpci = next(podatki)
-                    for vrstica in podatki:
-                        podatek = {k: None if v == "" else v for k, v in zip(stolpci, vrstica)}
-                        self.dodaj_vrstico(**podatek)
-            except Exception as e:
-                print(f"Napaka pri uvozu podatkov iz {self.podatki}: {e}")
-
+        if self.podatki is None:
+            return None
+        try:
+            with open(self.podatki, encoding=encoding) as datoteka:
+                podatki = csv.reader(datoteka, delimiter=';')
+                stolpci = next(podatki)
+                for vrstica in podatki:
+                    podatek = {k: None if v == "" else v for k, v in zip(stolpci, vrstica)}
+                    self.dodaj_vrstico(**podatek)
+        except Exception as e:
+            print(f"Napaka pri uvozu podatkov iz {self.podatki}: {e}")
 
 class Prvenstva(Tabela):
     ime = 'prvenstva'
@@ -66,11 +64,7 @@ class Prvenstva(Tabela):
         """
         self.conn.execute(sql)
 
-
 class Igralci(Tabela):
-    """
-    Tabela za igralce. Vsebuje podatke o imenu, priimku, državi, rojstnem datumu, poziciji in letu prvenstva.
-    """
     ime = 'igralec'
     podatki = 'igralci.csv'
 
@@ -87,7 +81,6 @@ class Igralci(Tabela):
         """
         self.conn.execute(sql)
 
-
 def pripravi_bazo():
     conn = sqlite3.connect("baza.sqlite")
     prvenstvo = Prvenstva(conn)
@@ -101,10 +94,5 @@ def pripravi_bazo():
     conn.commit()
     conn.close()
 
-
 if __name__ == "__main__":
-<<<<<<< HEAD
     pripravi_bazo()
-=======
-    pripravi_bazo()
->>>>>>> abe87205e60c5b8704c48a029d59d4e75cee6f25
