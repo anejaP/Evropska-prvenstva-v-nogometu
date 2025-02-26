@@ -14,7 +14,7 @@ def odstrani_odvecne_znake(tekst):
 # Nastavimo pot do predlog HTML datotek na isto lokacijo, kjer je ta datoteka
 bottle.TEMPLATE_PATH.insert(0, os.path.dirname(__file__))
 
-# Nastavimo dostop do statičnih datotek (npr. slike, CSS, JS)
+# Nastavimo dostop do statičnih datotek (npr. slike)
 @bottle.route('/static/<filepath:path>')
 def server_static(filepath):
     return bottle.static_file(filepath, root='./static')  # Datoteke se strežejo iz mape static/
