@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prvenstvo {{leto}}</title>
+    <title>Tekme - {{prvenstvo.leto}}</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -26,21 +26,38 @@
         }
 
         main {
-            padding: 2rem;
-        }
-
-        h2 {
-            color: #34495e;
+            padding: 2rem 4rem;
+            max-width: 800px;
+            margin: auto;
         }
 
         ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #e0e0e0;
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tekma-info {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #2980b9;
+            margin-bottom: 0.25rem;
+        }
+
+        .tekma-podatki {
+            font-weight: normal;
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-left: 0;
         }
 
         .back-link {
@@ -55,42 +72,38 @@
             color: #1abc9c;
         }
 
-        .match-info {
-            margin-bottom: 1rem;
+        .team-link {
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: bold;
         }
 
-        .additional-info {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 1rem;
+        .team-link:hover {
+            color: #1abc9c;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Evropsko prvenstvo {{leto}}</h1>
+    <h1>Tekme - {{prvenstvo.leto}}</h1>
 </header>
 
 <main>
     <a href="/" class="back-link">&larr; Nazaj na seznam let</a>
-
-    <h2>Tekme:</h2>
     <ul>
         % for tekma in tekme:
         <li>
-            <div class="match-info">
-                <strong>{{tekma['datum']}}</strong>: 
-                <a href="/igralci/{{leto}}/{{tekma['domaca_ekipa']}}">{{tekma['domaca_ekipa']}}</a> 
-                {{tekma['domaci_goli']}} - {{tekma['gostujoci_goli']}} 
-                <a href="/igralci/{{leto}}/{{tekma['gostujoca_ekipa']}}">{{tekma['gostujoca_ekipa']}}</a>
+            <div class="tekma-info">
+                <a href="/igralci/{{ prvenstvo.leto }}/{{ tekma.domaca_ekipa }}" class="team-link">{{ tekma.domaca_ekipa }}</a> - 
+                <a href="/igralci/{{ prvenstvo.leto }}/{{ tekma.gostujoca_ekipa }}" class="team-link">{{ tekma.gostujoca_ekipa }}</a> ({{ tekma.domaci_goli }} : {{ tekma.gostujoci_goli }})
             </div>
-            <div class="additional-info">
-                {{tekma['dodatek']}}<br>
-                Faza tekmovanja: {{tekma['del_prvenstva']}}<br>
-                Stadion: {{tekma['stadion']}}<br>
-                Mesto: {{tekma['mesto']}}<br>
-                Št. gledalcev: {{tekma['stevilo_gledalcev']}}
+            <div class="tekma-podatki">
+                Datum: {{ tekma.datum.split(' (')[0] }}<br>
+                Del prvenstva: {{ tekma.del_prvenstva }}<br>
+                Stadion: {{ tekma.stadion }}<br>
+                Mesto: {{ tekma.mesto }}<br>
+                Število gledalcev: {{ tekma.stevilo_gledalcev }}
             </div>
         </li>
         % end

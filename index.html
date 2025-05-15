@@ -26,55 +26,75 @@
         }
 
         main {
-            padding: 2rem;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
         }
 
         .content {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        img {
-            max-width: 300px;
-            height: auto;
-            border-radius: 8px;
-            justify-self: center;
-        }
-
-        .text-content {
-            max-width: 600px;
-            text-align: justify;
+            flex-basis: 40%;
+            min-width: 300px;
+            text-align: center;
+            max-width: 500px;
         }
 
         .years-list {
-            padding-left: 1rem;
+            flex-basis: 40%;
+            min-width: 300px;
+            text-align: left;
+            padding-left: 2rem;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
         }
 
         h2 {
             color: #34495e;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            text-align: left;
         }
 
         p {
             font-size: 1.25rem;
             color: #2c3e50;
             margin-bottom: 1.5rem;
+            text-align: center;
         }
 
         ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
-            margin: 0.5rem 0;
+            margin: 0.75rem 0;
+        }
+
+        .prvenstvo-leto {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #2980b9;
+        }
+
+        .prvenstvo-podatki {
+            font-weight: normal;
+            color: #555;
+            font-size: 1rem;
+            margin-left: 0;
+            line-height: 1.4;
+            margin-top: 0.25rem;
         }
 
         a {
             text-decoration: none;
             color: #2980b9;
-            font-size: 1.25rem;
             font-weight: 700;
         }
 
@@ -92,18 +112,16 @@
 <main>
     <div class="content">
         <img src="/static/images/uefa_trophy.png" alt="Uradna UEFA trofeja">
-        <div class="text-content">
-            <p>
-                Evropska prvenstva v nogometu so ena izmed najpomembnejših tekmovanj na svetu, kjer se 
-                najboljše reprezentance Evrope pomerijo za naslov evropskega prvaka. Tekmovanje poteka 
-                vsaka štiri leta in je prvič potekalo leta 1960. Skozi leta je prvenstvo prineslo številne 
-                nepozabne trenutke, spektakularne zadetke in legendarne igralce, ki so zaznamovali zgodovino nogometa.
-            </p>
-        </div>
-        <div class="years-list">
-            <h2>Izberite leto prvenstva:</h2>
-            <ul id="leta-prvenstev"></ul>
-        </div>
+        <p>
+            Evropska prvenstva v nogometu so ena izmed najpomembnejših tekmovanj na svetu, kjer se 
+            najboljše reprezentance Evrope pomerijo za naslov evropskega prvaka. Tekmovanje poteka 
+            vsaka štiri leta in je prvič potekalo leta 1960. Skozi leta je prvenstvo prineslo številne 
+            nepozabne trenutke, spektakularne zadetke in legendarne igralce, ki so zaznamovali zgodovino nogometa.
+        </p>
+    </div>
+    <div class="years-list">
+        <h2>Izberite leto prvenstva:</h2>
+        <ul id="leta-prvenstev"></ul>
     </div>
 </main>
 
@@ -112,9 +130,13 @@
         .then(response => response.json())
         .then(data => {
             let seznam = document.getElementById('leta-prvenstev');
-            data.forEach(leto => {
+            data.forEach(prvenstvo => {
                 let li = document.createElement('li');
-                li.innerHTML = `<a href="/prvenstvo/${leto}">${leto}</a>`;
+                li.innerHTML = `<a href="/prvenstvo/${prvenstvo.leto}">
+                    <span class="prvenstvo-leto">${prvenstvo.leto}</span><br>
+                    <span class="prvenstvo-podatki">Gostiteljica: ${prvenstvo.drzava_gostiteljica}</span><br>
+                    <span class="prvenstvo-podatki">Št. tekem: ${prvenstvo.st_tekem}</span>
+                </a>`;
                 seznam.appendChild(li);
             });
         });

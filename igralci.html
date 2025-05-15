@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Igralci države {{drzava}} - {{leto}}</title>
+    <title>Igralci države {{ drzava }} - {{ leto }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -26,17 +26,38 @@
         }
 
         main {
-            padding: 2rem;
+            padding: 2rem 4rem;
+            max-width: 800px;
+            margin: auto;
         }
 
         ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #e0e0e0;
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .igralec-ime {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #2980b9;
+            margin-bottom: 0.25rem;
+        }
+
+        .igralec-podatki {
+            font-weight: normal;
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-left: 0;
         }
 
         .back-link {
@@ -55,16 +76,17 @@
 <body>
 
 <header>
-    <h1>Igralci države {{drzava}} - {{leto}}</h1>
+    <h1>Igralci države {{ drzava }} - {{ leto }}</h1>
 </header>
 
 <main>
-    <a href="/prvenstvo/{{leto}}" class="back-link">&larr; Nazaj na tekme</a>
-
-    <h2>Seznam igralcev:</h2>
+    <a href="/prvenstvo/{{ leto }}" class="back-link">&larr; Nazaj na tekme</a>
     <ul>
         % for igralec in igralci:
-        <li>{{igralec['ime_priimek']}} (Pozicija: {{igralec['pozicija']}}, Rojstni datum: {{igralec['rojstni_datum']}})</li>
+        <li>
+            <div class="igralec-ime">{{ igralec.ime_priimek }}</div>
+            <div class="igralec-podatki">Pozicija: {{ igralec.pozicija }}<br>Rojstni datum: {{ igralec.rojstni_datum }}</div>
+        </li>
         % end
     </ul>
 </main>
