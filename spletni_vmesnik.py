@@ -1,8 +1,6 @@
 import bottle
 from model import Prvenstva, Tekma, Igralec
 
-bottle.TEMPLATE_PATH.insert(0, "./predloge")
-
 # Strezemo statične datoteke (slike, CSS, JavaScript)
 @bottle.route('/static/<filepath:path>')
 def server_static(filepath):
