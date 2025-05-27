@@ -29,7 +29,7 @@ def prikazi_tekme():
         else:
             print(f"\nTekme v letu {leto}:")
             for tekma in tekme:
-                print(f"{tekma.datum}: {tekma.domaca_ekipa} {tekma.domaci_goli} - {tekma.gostujoci_goli} {tekma.gostujoca_ekipa} ({tekma.stadion}, {tekma.mesto}) - {tekma.del_prvenstva}")
+                print(f"{tekma.datum.split(' (')[0]}: {tekma.domaca_ekipa} {tekma.domaci_goli} - {tekma.gostujoci_goli} {tekma.gostujoca_ekipa} ({tekma.stadion}, {tekma.mesto}) - {tekma.del_prvenstva}")
     except ValueError:
         print("Napaka: vnesi pravilno številko leta.")
 
