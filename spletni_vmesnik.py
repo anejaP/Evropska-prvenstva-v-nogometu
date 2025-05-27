@@ -22,8 +22,6 @@ def leta():
 @bottle.get('/prvenstvo/<leto:int>')
 def prvenstvo(leto):
     prvenstvo = Prvenstva.pridobi_prvenstvo(leto)
-    if not prvenstvo:
-        return bottle.template('napaka.html', sporocilo=f"Prvenstvo za leto {leto} ni bilo najdeno.")
     tekme = Tekma.pridobi_tekme_za_prvenstvo(leto)
     return bottle.template('prvenstvo.html', prvenstvo=prvenstvo, tekme=tekme)
 
